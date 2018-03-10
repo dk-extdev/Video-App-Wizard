@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Admin;
 use App\Footer;
 use App\Title;
-use App\News;
+use App\TemplateGroup;
+use App\TemplateField;
 use DB;
 use App\Contact;
 use App\Logo;
@@ -30,12 +31,13 @@ class TemplateController extends Controller
         	$template_group_id = DB::table('template_group')->orderBy('id', 'desc')->first()->id;
         }
         foreach ($attr as $k => $v) {
-        	DB::table('template_field')->insert([
-        		'template_group_id' => $template_group_id,
-        		'title' => $v[0],
-        		'type' => $v[1],
-        		'validation_rules' => $v[2]
-        	]);    
+            DB::table('template_field')->insert([
+                'template_group_id' => $template_group_id,
+                'title' => $v[0],
+                'html_label' => $v[1],
+                'type' => $v[2],
+                'validation_rules' => $v[3]
+            ]);  
         }
         $response['success'] = 'success';
         $response['project'] = $project;
@@ -63,11 +65,53 @@ class TemplateController extends Controller
             );
         }
 
-        $templates = DB::table('template_group')
-        ->select(DB::raw('*, (SELECT COUNT(*) FROM template_field as f WHERE f.template_group_id = template_group.id) as count'))->get();
-
-        
+        $template_fields = DB::select("SELECT *, (SELECT COUNT(*) FROM template_field as f WHERE ff.template_group_id = f.template_group_id) as count FROM template_field as ff WHERE 1");
+        $template_groups = DB::table('template_group')->get();
         return view('admin.viewtemplate')
-        ->with('templates',$templates);
+        ->with('template_fields',$template_fields)
+        ->with('template_groups',$template_groups);
+    }
+    public function edit($id)
+    {
+        $admin_id_loggedin = Session::get('admin_id_loggedin');
+
+        if($admin_id_loggedin == ''){
+            return redirect()->action(
+                'AdminController@getLogin'
+            );
+        }
+        $templategroupdata = TemplateGroup::where('id', '=', $id)->first();
+        $templatefielddata = TemplateField::where('template_group_id', '=', $id)->get();
+        return view('admin.edittemplate')
+        ->with('templategroupdata',$templategroupdata)
+        ->with('templatefielddata',$templatefielddata);
+    }
+    public function update($id, Request $request)
+    {
+        $project = $request->project;
+        $attr = json_decode($request->attr);
+        DB::table('template_group')->where('id', $id)->update( ['project' => $project]);
+        DB::table('template_field')->where('template_group_id', '=', $id)->delete(); 
+        foreach ($attr as $k => $v) {
+            DB::table('template_field')->insert([
+                'template_group_id' => $id,
+                'title' => $v[0],
+                'html_label' => $v[1],
+                'type' => $v[2],
+                'validation_rules' => $v[3]
+            ]);    
+        }
+        $response = array();
+        $response['success'] = 'success';
+        return \Response::json($response);
+    }
+    public function delete($id)
+    {
+        TemplateGroup::where('id', $id)->delete();
+        TemplateField::where('template_group_id', $id)->delete();
+        $response = array();
+        $response['success'] = 'success';
+        $response['id'] = $id;
+        return \Response::json($response);
     }
 }

@@ -17,7 +17,7 @@ class CreateNewsTable extends Migration {
 			$table->integer('id', true);
 			$table->string('app_name');
 			$table->string('news_title');
-			$table->text('news_description');
+			$table->longText('news_description');
 			$table->string('support_email');
 			$table->timestamps();
 		});

@@ -178,11 +178,62 @@ $(function () {
         ]
     });
   });
+  $('.delete-template-id').click(function(){
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    var id = $(this).data('id');
+    BootstrapDialog.show({
+        title: 'Delete News',
+        message: 'Are you sure you want to delete this template?',
+        buttons: [
+        {
+            label: 'Cancel',
+            action: function(dialogItself){
+                dialogItself.close();
+            }
+        },{
+            label: 'Delete',
+            // no title as it is optional
+            cssClass: 'btn-danger',
+            action: function(dialogItself){
+              dialogItself.close();
+              $.ajax({
+                  url: "deletetemplate/"+id,
+                  type: 'POST',
+                  dataType: "json",
+                  data: {
+                      "id": id,
+                  },
+                  success: function (data)
+                  {
+                      if(data.success=="success"){
+                        $('#templateTable tr').each(function(){
+                          if($(this).data('id') && $(this).data('id')==data.id){
+                            $(this).remove();
+                          }
+                        });
+                      }
+                  }
+              });
+            }
+        }
+        ]
+    });
+  });
+  $("body").on("click", "#removeTemplate", function() {
+    $(this).parent().parent().remove();
+  });
   $('#addTemplate').click(function(){
     var html = '';
     html += '<tr>\
       <td>\
-        <input type="text project" required="true" class="form-control">\
+        <input type="text" required="true" class="form-control">\
+      </td>\
+      <td>\
+        <input type="text" required="true" class="form-control">\
       </td>\
       <td>\
         <select class="form-control color-picker">\
@@ -192,14 +243,15 @@ $(function () {
         </select>\
       </td>\
       <td>\
-        <input type="text validation-rules" required="true" class="form-control">\
+        <input type="text" required="true" class="form-control">\
       </td>\
       <td>\
+        <button type="button" id="removeTemplate" class="form-control add-row btn btn-block btn-info" ><i class="glyphicon glyphicon-minus"></i></button>\
       </td>\
     </tr>';
     $('#newTemplate tbody').append(html);
   });
-  $('#btnTemplate').click(function(){
+  $('#btnAddTemplate').click(function(){
     if(!$('#project').val()){
       $('#project').focus();
       return false;
@@ -213,7 +265,6 @@ $(function () {
           });
         }
       });
-      console.log(attr);
       if(!attr.length){
         return false;
       }else{
@@ -236,6 +287,53 @@ $(function () {
           type: "POST",
           success: function (data)
           {
+            if(data['success']=="success"){
+              $('.alert-success').show();
+              setTimeout(function(){ $('.alert-success').hide(); }, 2000);
+            }
+          }
+        });
+      }
+    }
+  });
+  $('#btnUpdateTemplate').click(function(){
+    var id = $(this).attr('template_group_id');
+    if(!$('#project').val()){
+      $('#project').focus();
+      return false;
+    }else{
+      var attr = [];
+      $('#newTemplate tbody tr').each(function(){
+        if($(this).find(".form-control").first().val()) {
+          attr.push(new Array);
+          $(this).find(".form-control").not("button").each(function(){
+            attr[attr.length - 1].push($(this).val());
+          });
+        }
+      });
+      if(!attr.length){
+        return false;
+      }else{
+        var formData = new FormData();
+        var project = $("#project").val();
+        formData.append('project', project);
+        formData.append('attr', JSON.stringify(attr));
+        $.ajaxSetup({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+        });
+        $.ajax(
+        {
+          url: id,
+          data: formData,
+          processData: false,
+          contentType: false,
+          dataType: "json",
+          type: "POST",
+          success: function (data)
+          {
+            console.log(data);
             if(data['success']=="success"){
               $('.alert-success').show();
               setTimeout(function(){ $('.alert-success').hide(); }, 2000);

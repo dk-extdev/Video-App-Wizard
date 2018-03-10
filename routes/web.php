@@ -86,6 +86,13 @@ Route::post('/admin/deletenews/{id}', ['as' => 'admin_delete_news', 'uses' => 'N
 Route::get('/admin/viewtemplate', ['as' => 'admin_view_template', 'uses' => 'TemplateController@view']);
 Route::get('/admin/createtemplate', ['as'=>'admin_create_template', 'uses'=>'TemplateController@create']);
 Route::post('admin/createtemplate', ['as'=>'admin_create_template', 'uses'=>'TemplateController@add']);
+Route::get('/admin/edittemplate/{id}', ['as' => 'admin_edit_template', 'uses' => 'TemplateController@edit']);
+Route::post('/admin/edittemplate/{id}', ['as' => 'admin_update_template', 'uses' => 'TemplateController@update']);
+Route::post('/admin/deletetemplate/{id}', ['as' => 'admin_delete_template', 'uses' => 'TemplateController@delete']);
+
+
+
+
 
 
 

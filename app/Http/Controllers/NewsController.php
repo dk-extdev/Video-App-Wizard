@@ -27,7 +27,7 @@ class NewsController extends Controller
         $news= new News();
         $news->app_name= $request['app_name'];
         $news->news_title= $request['news_title'];
-        $news->news_description= $request['news_description'];
+        $news->news_description= $request['editor_note'];
         $news->support_email= $request['support_email'];
         $news->created_at= date('Y-m-d H:i:s');
         $news->updated_at= date('Y-m-d H:i:s');
@@ -75,7 +75,7 @@ class NewsController extends Controller
 		$news = News::find($id);
 		$news->app_name= $request['app_name'];
         $news->news_title= $request['news_title'];
-        $news->news_description= $request['news_description'];
+        $news->news_description= $request['editor_note'];
         $news->support_email= $request['support_email'];
         $news->created_at= date('Y-m-d H:i:s');
         $news->updated_at= date('Y-m-d H:i:s');

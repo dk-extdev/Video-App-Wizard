@@ -159,7 +159,12 @@
             var html = '';
             html += '<input type="hidden" id="project_title" name="project_title" value="'+$("#projecttitle").val()+'"/>';
             html += '<input type="hidden" id="template_video_id" name="template_video_id" value="'+$('#template_video_id').val()+'"/>';
-            
+            html += '<div class="form-check">\
+                      <input class="form-check-input" type="checkbox" id="directDownload" value="unchecked" name="directDownload">\
+                      <label class="form-check-label" for="directDownload">\
+                        Do not upload to youtube and send email.\
+                      </label>\
+                    </div>';
             var template_html = '';
             common_field.forEach(function(common){
 
@@ -252,15 +257,51 @@
       },
       onFinished: function(event, currentIndex) {
         if($('.create_video-step3-2').is(':visible')){
-          if(!$("#customer_first_name").val() || !$("#customer_last_name").val() || !$("#customer_email").val() || !$("#sender_name").val() || !$("#sender_email").val()){
-            $(window).scrollTop(0);
-            $('.manual-field-error').html('<strong>Please input correct info! </strong>');
-            $('.manual-field-error').show();
-            setTimeout(function(){ 
-              $('.manual-field-error').html('');
-              $('.manual-field-error').hide(); 
-            }, 6000);
-            return false;
+          if(!$("#directDownload").is(':checked')){
+            if(!$("#customer_first_name").val() || !$("#customer_last_name").val() || !$("#customer_email").val() || !$("#sender_name").val() || !$("#sender_email").val()){
+              $(window).scrollTop(0);
+              $('.manual-field-error').html('<strong>Please input correct info! </strong>');
+              $('.manual-field-error').show();
+              setTimeout(function(){ 
+                $('.manual-field-error').html('');
+                $('.manual-field-error').hide(); 
+              }, 6000);
+              return false;
+            }else{
+              var manualformData = $("#upload-manually").serialize();
+              $.ajax({
+                url: "create_videos/render",
+                type: 'post',
+                dataType: "json",
+                data: manualformData,
+                success: function (data)
+                {
+                  if(data.success=="success"){
+                    location.href = "{{URL::to('my_videos')}}";
+                  }else if(data.success=="failed"){
+                    $(window).scrollTop(0);
+                    var errorHtml = '';
+                    if(typeof(data.errors) == "object"){
+                      var error = data.errors;
+                      for(var i in data.errors){
+                        for(var j in data.errors[i]){
+                          errorHtml += '<strong>'+data.errors[i][j]+'</strong><br>';   
+                        }
+                      }
+                      $('.manual-field-error').html(errorHtml);
+                      $('.manual-field-error').show();
+                    }else{
+                      $('.manual-field-error').html('<strong>'+data.errors+'</strong>');
+                      $('.manual-field-error').show();  
+                    }
+                    setTimeout(function(){ 
+                      $('.manual-field-error').html('');
+                      $('.manual-field-error').hide(); 
+                    }, 6000);
+                  }
+                }
+              });
+            }
           }else{
             var manualformData = $("#upload-manually").serialize();
             $.ajax({
@@ -304,7 +345,6 @@
           }
           var editableData;
           editableData = getEditableTableData();
-          console.log(editableData);
           if(!$('#csv_sender_name').val() || !$('#csv_sender_email').val() || !editableData.length){
             $(window).scrollTop(0);
             $('.csv-field-error').html('<strong>Please input correct info! </strong>');
@@ -582,6 +622,19 @@
 
         }
       });
+    });
+    $("body").on("click","#directDownload", function(){
+      if(!$(this).is(':checked')){
+        $(this).val("unchecked");
+        $('#sender_name').parent().show();
+        $('#sender_email').parent().show();
+        $('#email_subject').parent().show();
+      }else{
+        $(this).val("checked");
+        $('#sender_name').parent().hide();
+        $('#sender_email').parent().hide();
+        $('#email_subject').parent().hide();
+      }
     });
     $("body").on("click", ".gallery", function(index) {
       if($(this).data('id')){

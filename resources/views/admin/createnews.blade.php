@@ -69,7 +69,7 @@
               <tr>
                 <td><i>news_description</i></td>
                 <td>News Description</td>
-                <td><textarea class="froala-editor" name="news_description"></textarea></td>
+                <td><input type="hidden" name="editor_note" id="editor_note"><div id="summernote"></div></td>
               </tr>
               <tr>
                 <td><i>support_email</i></td>
@@ -80,7 +80,7 @@
           </table>
         </div>
         <div class="box-footer">
-          <button type="submit" class="btn btn-info pull-right">Add News</button>
+          <button type="submit" class="news-add btn btn-info pull-right">Add News</button>
         </div>
       </div>
       {!! Form::close() !!}

@@ -70,7 +70,11 @@
 	                                    <td>{{ $uservideo->customer_email }}</td>
 	                                    <td>{{ $uservideo->customer_first_name.' '.$uservideo->customer_last_name }}</td>
 	                                    <td>{{ $uservideo->updated_at }}</td>
-	                                    <td><a href="https://youtu.be/{{ $uservideo->youtube_id }}">https://youtu.be/{{ $uservideo->youtube_id }}</a></td>
+	                                    @if(isset($uservideo->youtube_id) && !empty($uservideo->youtube_id))
+	                                    	<td><a href="https://youtu.be/{{ $uservideo->youtube_id }}">https://youtu.be/{{ $uservideo->youtube_id }}</a></td>
+	                                	@else
+	                                		<td><a class="directly-download"  href="{{ $uservideo->video_url }}" download>{{ $uservideo->video_url }}</a></td>
+	                                	@endif
 	                                    <td><button class="btn btn-primary btn-sm del-btn" videoID = "{{$uservideo->id}}"><i class="fa fa-remove"></i> Delete</button></td>
 	                                </tr>
 	                                @endforeach

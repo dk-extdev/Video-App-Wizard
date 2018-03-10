@@ -6,12 +6,12 @@
 
 <section class="content-header">
   <h1>
-    Create Template
+    Edit Template
   </h1>
   <ol class="breadcrumb">
     <li class="treeview menu-open"><a href="{{ route('admin_dashboard') }}"><i class="fa fa-file-archive-o"></i> Home</a></li>
     <li><a href="#"><i class="fa fa-user"></i> Template</a></li>
-    <li class="active">Create Template</li>
+    <li class="active">Edit Template</li>
   </ol>
 </section>
 <section class="content">
@@ -38,7 +38,7 @@
       @endif
       <div class="box box-info">
         <div class="box-header">
-          <h3 class="box-title">Create Template</h3>
+          <h3 class="box-title">Update Template</h3>
         </div>
         <div class="box-body">
           <div class="container-fluid">
@@ -46,7 +46,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Project:</label>
-                  <input type="text" id="project" name="project" required="true" class="form-control">
+                  <input type="text" id="project" name="project" required="true" value="{{$templategroupdata->project}}" class="form-control">
                 </div>
               </div>
             </div>
@@ -64,34 +64,52 @@
                   </tr>
                 </thead>
                 <tbody>
+                  @foreach($templatefielddata as $index=>$templatefield) 
                   <tr>
                     <td>
-                      <input type="text" required="true" class="form-control">
+                      <input type="text" required="true" value="{{$templatefield->title}}" class="form-control">
                     </td>
                     <td>
-                      <input type="text" required="true" class="form-control">
+                      <input type="text" required="true" value="{{$templatefield->html_label}}" class="form-control">
                     </td>
                     <td>
                       <select class="form-control color-picker">
-                        <option >Text</option>
-                        <option >File</option>
-                        <option >Color Picker</option>
+                        <option 
+                        @if ($templatefield->type === "Text") 
+                          selected 
+                        @endif 
+                        >Text</option>
+                        <option 
+                        @if ($templatefield->type === "File") 
+                        selected 
+                        @endif
+                        >File</option>
+                        <option 
+                        @if ($templatefield->type === "Color Picker") 
+                        selected 
+                        @endif
+                        >Color Picker</option>
                       </select>
                     </td>
                     <td>
-                      <input type="text" required="true" class="form-control">
+                      <input type="text" required="true" value="{{$templatefield->validation_rules}}" class="form-control">
                     </td>
                     <td>
+                      @if ($index === 0) 
                       <button type="button" id="addTemplate" class="form-control add-row btn btn-block btn-info" ><i class="glyphicon glyphicon-plus"></i></button>
+                      @else
+                      <button type="button" id="removeTemplate" class="form-control add-row btn btn-block btn-info" ><i class="glyphicon glyphicon-minus"></i></button>
+                      @endif
                     </td>
                   </tr>
+                  @endforeach
                 </tbody>
               </table>
             </div>
           </div>
         </div>
         <div class="box-footer">
-          <button id="btnAddTemplate" class="btn btn-info pull-right">Add Template</button>
+          <button id="btnUpdateTemplate" template_group_id="{{$templategroupdata->id}}" class="btn btn-info pull-right">Update Template</button>
         </div>
       </div>
     </div>

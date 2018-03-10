@@ -39,32 +39,16 @@
 <script src="{{ asset('assets/admin/dist/js/pages/dashboard.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('assets/admin/dist/js/demo.js') }}"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/codemirror.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/mode/xml/xml.min.js"></script>
-
-<!-- Include Editor JS files. -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.7.5/js/froala_editor.pkgd.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
 <script src="{{ asset('assets/admin/admin.js') }}"></script>
 <script>
   (function ($) {
   	$(document).ready(function() {
-	    /*$('#customerTable').DataTable()({
-	      'paging'      : true,
-	      'lengthChange': false,
-	      'searching'   : false,
-	      'ordering'    : true,
-	      'info'        : true,
-	      'autoWidth'   : false
-	    });*/
-	    /*$(".froala-editor").froalaEditor({
-			imageManagerLoadURL: 'http://example.com/load_images'
-		});*/
-  		$(".froala-editor").froalaEditor({
-			imageManagerLoadURL: 'http://example.com/load_images'
-		});
-		$("#save").click(function(e) {
-			e.preventDefault();
-		});
-	 });
+	    $('#summernote').summernote();
+	    $('.news-add').click(function(){
+	    	var markupStr = $('#summernote').summernote('code');
+	    	$('#editor_note').val(markupStr);
+	    });
+	});
   })(jQuery);
 </script>
