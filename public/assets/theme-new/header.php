@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Dynamic Video Project</title>
+    <title>Video Platform Project</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -62,7 +62,7 @@
                         <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
                             <i class="fa fa-reorder"></i>
                         </button>
-                        <a href="index.php?menu=dashboard" class="navbar-brand">Dynamic Video</a>
+                        <a href="index.php?menu=dashboard" class="navbar-brand">Video Platform</a>
                     </div>
                     <div class="navbar-collapse collapse" id="navbar">
                         <ul class="nav navbar-nav">

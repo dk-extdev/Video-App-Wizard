@@ -28,13 +28,15 @@
 					<table id="templateTable" class="table table-bordered table-striped">
 						<cols>
                     		<col width = "10%" >
-                    		<col width = "20%" >
+                    		<col width = "10%" >
+                    		<col width = "10%" >
                     		<col width = "60%" >
                     		<col width = "10%" >
                     	</cols>
 						<thead>
 						<tr>
 							<th>ID</th>
+							<th>Flag</th>
 							<th>Project</th>
 							<th>Fields</th>
 							<th>Action</th>
@@ -44,6 +46,11 @@
 							@foreach($template_groups as $template_group) 
 							<tr data-id="{{ $template_group->id }}">
 									<td>{{ $template_group->id }}</td>
+									<td>@if($template_group->flag==1)
+										Show
+									@else
+										Hide
+									@endif</td>
 									<td>{{ $template_group->project }}</td>
 									<td>
 										@foreach($template_fields as $template_field)
@@ -60,6 +67,7 @@
 						<tfoot>
 						<tr>
 							<th>ID</th>
+							<th>Flag</th>
 							<th>Project</th>
 							<th>Fields</th>
 							<th>Action</th>

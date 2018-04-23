@@ -16,7 +16,7 @@ class ReplicateQueueClient
 
     public function sendMessage($messageBody)
     {
-        $this->sqsClient->sendMessage([
+        return $this->sqsClient->sendMessage([
             'QueueUrl'    => $this->queueUrl,
             'MessageBody' => json_encode($messageBody)
         ]);

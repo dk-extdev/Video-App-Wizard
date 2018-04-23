@@ -44,6 +44,9 @@
       <li class="{{ Request::is('admin/news') ? 'active' : '' }}">
         <a href="{{ route('admin_news') }}"><i class="fa fa-newspaper-o"></i> <span>News & Update</span></a>
       </li>
+      <li class="{{ Request::is('admin/category') ? 'active' : '' }}">
+        <a href="{{ route('admin_category') }}"><i class="fa fa-tag"></i> <span>Category</span></a>
+      </li>
       <li class="treeview {{ Request::is('admin/createtemplate') || Request::is('admin/viewtemplate') ? 'menu-open active' : '' }}">
         <a href="#">
           <i class="fa fa-file-archive-o"></i>
@@ -56,6 +59,22 @@
           <li class="{{ Request::is('admin/createtemplate') ? 'active' : '' }}"><a href="{{ route('admin_create_template') }}"><i class="fa fa-circle-o"></i> Add New Template</a></li>
           <li class="{{ Request::is('admin/viewtemplate') ? 'active' : '' }}"><a href="{{ route('admin_view_template') }}"><i class="fa fa-circle-o"></i> View Template</a></li>
         </ul>
+      </li>
+      <li class="treeview {{ Request::is('admin/createtemplatevideos') || Request::is('admin/viewtemplatevideos') ? 'menu-open active' : '' }}">
+        <a href="#">
+          <i class="fa fa-file-archive-o"></i>
+          <span>TemplateVideos</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li class="{{ Request::is('admin/createtemplatevideos') ? 'active' : '' }}"><a href="{{ route('admin_create_templatevideos') }}"><i class="fa fa-circle-o"></i> Add New Template Videos</a></li>
+          <li class="{{ Request::is('admin/viewtemplatevideos') ? 'active' : '' }}"><a href="{{ route('admin_view_templatevideos') }}"><i class="fa fa-circle-o"></i> View Template Videos</a></li>
+        </ul>
+      </li>
+      <li class="{{ Request::is('admin/emailtemplate') ? 'active' : '' }}">
+        <a href="{{ route('admin_emailtemplate') }}"><i class="fa fa-envelope"></i> <span>Email Template</span></a>
       </li>
       <li class="{{ Request::is('admin/setting') ? 'active' : '' }}">
         <a href="{{ route('admin_setting') }}"><i class="fa fa-gear"></i> <span>Setting</span></a></li>

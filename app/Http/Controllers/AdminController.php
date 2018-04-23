@@ -61,6 +61,29 @@ class AdminController extends Controller
         $request->session()->flash('message', 'Login incorrect!');
         return redirect()->back();
     }
+
+    public function customerLogin(Request $request)
+    {
+        $admin_id_loggedin = Session::get('admin_id_loggedin');
+        if($admin_id_loggedin != ''){
+            if($request['id']){
+                $currentUser = User::where('id', '=', $request['id'])->first();
+                Auth::guard('user')->login($currentUser);
+                $user  = Auth::guard('user')->user();
+                if (! $user)
+                {
+                    throw new Exception('Error logging in');
+                }else{
+                    Session::put('user','user');
+                    Session::put('user_id_loggedin',$user->id);
+                    $response['success'] = 'success';
+                    $response['user'] = Auth::guard('user')->user();
+                    $response['url'] = route('my_videos');
+                    return \Response::json($response);
+                }
+            }
+        }
+    }
     
     public function logout()
     {

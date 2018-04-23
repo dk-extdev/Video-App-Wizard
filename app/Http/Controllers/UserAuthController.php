@@ -5,11 +5,13 @@ use App\Footer;
 use App\Title;
 use App\User;
 use Illuminate\Http\Request;
+use Dawson\Youtube\Facades\Youtube;
 
-use App\Http\Requests;
 use App\Contact;
 use App\Logo;
 use App\SocialIcon;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Session;
 use Illuminate\Support\Facades\Auth;
@@ -66,7 +68,6 @@ class UserAuthController extends Controller
         return redirect()->back();
     }
 
-
     public function logout()
     {
         Auth::guard('user')->logout();
@@ -84,6 +85,40 @@ class UserAuthController extends Controller
         ->withTitle($title)
         ->withFooter($footer)
         ->withLogo($logo);
+    }
+
+    public function youtubeCallback(Request $request)
+    {
+        if(!$request->has('code')) {
+            throw new Exception('$_GET[\'code\'] is not set. Please re-authenticate.');
+        }
+
+        $user_id_loggedin = Session::get('user_id_loggedin');
+        if($user_id_loggedin == ''){
+            return redirect()->action(
+                'UserAuthController@getLogin'
+            );
+        }
+
+        $token = Youtube::authenticate($request->get('code'));
+        if(isset($token['error'])) {
+            throw new \Exception($token['error_description']);
+        }
+
+        DB::table('youtube_access_tokens')->insert([
+            'user_id' => $user_id_loggedin,
+            'access_token' => json_encode($token),
+            'created_at'   => Carbon::createFromTimestamp($token['created'])
+        ]);
+        $url = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&'.http_build_query(array(
+                'access_token' => $token['access_token'],
+            ));
+
+        $user = User::find($user_id_loggedin);
+        $user->googleInfo = file_get_contents($url);
+        $user->save();
+
+        return redirect('settings');
     }
 
     public function getProfile()
@@ -104,6 +139,16 @@ class UserAuthController extends Controller
 
         $current_user_id = Session::get('user_id_loggedin');
         $data['current_user_info'] = User::where('id', '=', $current_user_id)->first();
+        $data['youtube'] =  Youtube::createAuthUrl();
+
+        $data['linked'] = is_object(DB::table('youtube_access_tokens')
+            ->latest('created_at')
+            ->where('user_id', $user_id_loggedin)
+            ->first());
+
+        $data['googleInfo'] = json_decode(DB::table('users')
+            ->where('id', $user_id_loggedin)
+            ->first()->googleInfo);
 
         return view('user.profile',$data)
         ->withSocial($social)

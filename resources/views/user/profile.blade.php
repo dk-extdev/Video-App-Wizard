@@ -48,6 +48,26 @@
                         </div>
 
                         <div class="row">
+                            <div class="col-lg-2 wow zoomIn ">
+                                <h3 class="m-t-none m-b"><i class="fa fa-user"></i>&nbsp;Youtube</h3>
+                                <h3 style="margin-left:16px" class="m-t-none m-b"><a target="_blank" href="{{$youtube}}">@if ($googleInfo) Relink @else Link @endif</a></h3>
+                            </div>
+                            @if (isset ($googleInfo))
+                            <div class="col-lg-1 text-right" style="padding-right:0; margin-left:-100px; margin-top:13px">
+                                @if (isset($googleInfo->link))
+                                    <a style="border-radius:50%;height:36px;width:36px;display: inline-block;overflow: hidden" target="_blank" href="{{$googleInfo->link}}"><img height="36" width="36" src="{{$googleInfo->picture}}" /></a>
+                                @else
+                                    <img style="border-radius:50%;height:36px;width:36px;overflow: hidden" height="36" width="36" src="{{$googleInfo->picture}}" />
+                                @endif
+                            </div>
+                            <div class="col-lg-2 wow zoomIn" style="margin-top:10px">
+                                {{$googleInfo->name}}<br>
+                                {{$googleInfo->email}}
+                            </div>
+                                @endif
+                        </div>
+
+                        <div class="row">
                             <div class="col-lg-6 wow zoomIn ">
                               <h3 class="m-t-none m-b"><i class="fa fa-user"></i>&nbsp;My Profile</h3>
                               <div class="ibox-content">

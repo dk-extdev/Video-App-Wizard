@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class TemplateVideos extends Model
 {
     protected $table = 'template_videos';
-
+    public $timestamps = true;
     public function category()
     {
         return $this->belongsTo(Category::class);

@@ -3,6 +3,6 @@
                 
             </div>
             <div>
-                <strong>Copyright</strong> Dynamic Video© 2014-2017
+                <strong>Copyright</strong> Video Platform© 2018
             </div>
         </div>

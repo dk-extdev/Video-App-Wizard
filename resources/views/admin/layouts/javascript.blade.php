@@ -39,7 +39,7 @@
 <script src="{{ asset('assets/admin/dist/js/pages/dashboard.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('assets/admin/dist/js/demo.js') }}"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
 <script src="{{ asset('assets/admin/admin.js') }}"></script>
 <script>
   (function ($) {
@@ -49,6 +49,42 @@
 	    	var markupStr = $('#summernote').summernote('code');
 	    	$('#editor_note').val(markupStr);
 	    });
+	    $('#templatevideosTable').DataTable( {
+		    "order": [[ 0, "asc" ]],
+		    "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+		    language: {
+		      searchPlaceholder: "",
+		      "paginate": {
+		        "previous": '<i class="fa fa-chevron-left"></i>',
+		        "next": '<i class="fa fa-chevron-right"></i>'
+		      },
+		      sSearch: "Search"
+		    }
+		});
+		$('#templateTable').DataTable( {
+		    "order": [[ 1, "asc" ]],
+		    "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+		    language: {
+		      searchPlaceholder: "",
+		      "paginate": {
+		        "previous": '<i class="fa fa-chevron-left"></i>',
+		        "next": '<i class="fa fa-chevron-right"></i>'
+		      },
+		      sSearch: "Search"
+		    }
+		});
+		var categoryTable = $('#categoryTable').DataTable( {
+		    "order": [[ 1, "asc" ]],
+		    "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+		    language: {
+		      searchPlaceholder: "",
+		      "paginate": {
+		        "previous": '<i class="fa fa-chevron-left"></i>',
+		        "next": '<i class="fa fa-chevron-right"></i>'
+		      },
+		      sSearch: "Search"
+		    }
+		});
 	});
   })(jQuery);
 </script>

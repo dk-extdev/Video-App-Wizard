@@ -37,3 +37,10 @@ a[href="https://www.froala.com/wysiwyg-editor?k=u"] {
   border-radius: 50%;  
   outline: none !important;
 }
+.customer-login{
+  display: inline-block;
+    width: auto;
+}
+#customerTable th, td{
+  text-align: center;
+}

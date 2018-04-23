@@ -20,10 +20,7 @@
 <!-- Password Reset Start -->
 <div class="middle-box text-center loginscreen animated fadeInDown">
     <div>
-        <div>
-
-            <h1 class="logo-name">DV</h1>
-
+        <div class="video-platform-logo">
         </div>
 
         @if (session()->has('message'))
@@ -73,7 +70,7 @@
             <a href="{{ action('UserAuthController@getLogin') }}"><small>Back to login</small></a>
         </div>
 
-        <p class="m-t"> <small><strong>Copyright</strong> Dynamic Video&copy; 2014-2017</small> </p>
+        <p class="m-t"> <small><strong>Copyright</strong> Video Platform&copy; 2018</small> </p>
     </div>
 </div>
 <!-- Password Reset End -->

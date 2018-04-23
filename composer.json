@@ -4,11 +4,15 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "type": "project",
+    "repositories": [{
+        "type": "vcs",
+        "url": "https://github.com/dmatora/youtube"
+    }],
     "require": {
         "php": ">=7.0.0",
         "aws/aws-sdk-php": "~3.0",
         "aws/aws-sdk-php-laravel": "~3.0",
-        "dawson/youtube": "^4.1",
+        "dawson/youtube": "dev-master",
         "fideloper/proxy": "~3.3",
         "intervention/image": "^2.3",
         "laravel/framework": "5.5.*",

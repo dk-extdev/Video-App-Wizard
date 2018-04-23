@@ -17,16 +17,6 @@ class TemplateFieldTableSeeder extends Seeder
         \DB::table('template_field')->delete();
         
         \DB::table('template_field')->insert(array (
-            0 => 
-            array (
-                'id' => 1,
-                'template_group_id' => 1,
-                'title' => 'customer_domain',
-                'html_label' => 'Customer Domain',
-                'type' => 'Text',
-                'mandatory' => 0,
-                'validation_rules' => 'url',
-            ),
             1 => 
             array (
                 'id' => 2,

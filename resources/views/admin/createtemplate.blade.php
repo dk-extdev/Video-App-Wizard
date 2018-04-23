@@ -1,6 +1,6 @@
 @extends('admin.layouts.home')
 
-@section('title', 'Edit Template')
+@section('title', 'Create Template')
 
 @section('content')
 
@@ -48,6 +48,12 @@
                   <label>Project:</label>
                   <input type="text" id="project" name="project" required="true" class="form-control">
                 </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" checked value="" id="template_flag">
+                  <label class="form-check-label" for="template_flag">
+                    Flag(Show Template)
+                  </label>
+                </div>
               </div>
             </div>
             <div class="row">
@@ -55,12 +61,20 @@
                 <h4 class="box-title">Template Fields</h4>
               </div>
               <table id="newTemplate" class="table">
+                <cols>
+                  <col width = "20%" >
+                  <col width = "20%" >
+                  <col width = "15%" >
+                  <col width = "15%" >
+                  <col width = "30%" >
+                </cols>
                 <thead>
                   <tr>
                     <th>Title</th>
                     <th>Html Label</th>
                     <th>Type</th>
                     <th>Validation Rules</th>
+                    <th>Default Value</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -75,8 +89,14 @@
                       <select class="form-control color-picker">
                         <option >Text</option>
                         <option >File</option>
+                        <option >File Video</option>
+                        <option >File Music</option>
                         <option >Color Picker</option>
+                        <option >Outro</option>
                       </select>
+                    </td>
+                    <td>
+                      <input type="text" required="true" class="form-control">
                     </td>
                     <td>
                       <input type="text" required="true" class="form-control">

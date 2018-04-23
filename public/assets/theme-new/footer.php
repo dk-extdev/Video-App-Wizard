@@ -8,7 +8,7 @@
                 
             </div>
             <div>
-                <strong>Copyright</strong> Dynamic Video&copy; 2014-2017
+                <strong>Copyright</strong> Video Platform&copy; 2018
             </div>
         </div>
 

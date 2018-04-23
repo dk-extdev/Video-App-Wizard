@@ -4,6 +4,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 <meta content="" name="description" />
 <meta content="" name="author" />
+<link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
 <!-- BEGIN GLOBAL MANDATORY STYLES -->
 
 <!-- BEGIN GLOBAL MANDATORY STYLES -->
@@ -24,7 +25,7 @@
 <link href="{{ asset('assets/layouts/layout/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
 <!-- END THEME LAYOUT STYLES -->
 
-<link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+
 
 <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 <script>

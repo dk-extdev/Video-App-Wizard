@@ -15,78 +15,42 @@
 							My Purchases
 						</h2>
 					</div>
-					<div class="ibox-content">
-						<div class="row landing-page">
-							<div class="col-lg-2"></div>
-							<div class="col-lg-4 wow zoomIn">
-								<ul class="pricing-plan list-unstyled selected">
-									<li class="pricing-title">
-										Basic
-									</li>
-									<li class="pricing-desc">
-										Lorem ipsum dolor sit amet, illum fastidii dissentias quo ne. Sea ne sint animal iisque, nam an soluta sensibus.
-									</li>
-									<li class="pricing-price">
-										<span>$49.99</span> / month
-									</li>
-									<li>
-										Choose your videos
-									</li>
-									<li>
-										Make your own video
-									</li>
-									<li>
-										Add the text you want
-									</li>
-									<li>
-										Share it with 3 members
-									</li>
-									<li>
-										<a class="btn btn-default btn-md" href="#"><i class="fa fa-check"></i>&nbsp;Access</a>
-									</li>
-								</ul>
-							</div>
-							<div class="col-lg-4 wow zoomIn">
-								<ul class="pricing-plan list-unstyled">
-									<li class="pricing-title">
-										Standard
-									</li>
-									<li class="pricing-desc">
-										Lorem ipsum dolor sit amet, illum fastidii dissentias quo ne. Sea ne sint animal iisque, nam an soluta sensibus.
-									</li>
-									<li class="pricing-price">
-										<span>$12.99</span> / month
-									</li>
-									<li>
-										Choose your videos
-									</li>
-									<li>
-										Make your own video
-									</li>
-									<li>
-										Add the text you want
-									</li>
-									<li>
-										Share it with 3 members
-									</li>
-									<li>
-										Find some more stuff
-									</li>
-									<li>
-										No stress, no fuss
-									</li>
-									<li>
-										Easy to use
-									</li>
-									<li class="plan-action">
-										<a class="btn btn-primary btn-md" href="#"><i class="fa fa-shopping-cart"></i>&nbsp;Purchase</a>
-									</li>
-								</ul>
-							</div>
-							<div class="col-lg-2"></div>
-						</div>
-
-					</div><!--ibox-content-->
+						@if ($premium)
+							<div class="ibox-content" style="height: 370px">
+								<div class="row landing-page">
+									<ul class="list-unstyled">
+										<li class="pricing-title" style="display: block; text-align: center; width: 300px; margin: 0 auto">
+											Account Level: Premium
+										</li>
+									</ul>
+								</div>
+							</div><!--ibox-content-->
+						@else
+							<div class="ibox-content">
+								<div class="row landing-page">
+									<ul class="list-unstyled">
+										<li class="pricing-title" style="display: block; text-align: center; width: 300px; margin: 0 auto">
+											Account Level: Standard
+										</li>
+									</ul>
+								</div>
+								<div class="row landing-page">
+									<div class="col-lg-3"></div>
+									<div class="col-lg-5 wow zoomIn" style="margin:0 4.16666666%; background: #fafdd7;border-radius: 20px; border: 2px solid black">
+										<ul class="pricing-plan list-unstyled" style="margin-top: 0">
+											<li class="pricing-desc">
+												Want New Video Templates Worth Over $5000 Added To Your Account Each Month With The Latest Personalization, Clickable Video Hotspots Technologies Integrated?
+											</li>
+											<li class="plan-action">
+												<a target="_blank" class="btn btn-primary btn-md" href="http://www.videoplatform.io/l/premium/"><i class="fa fa-shopping-cart"></i>&nbsp;UPGRADE TO PREMIUM<br>$1 TRIAL FOR 31 DAYS
+												</a>
+											</li>
+										</ul>
+									</div>
+									<div class="col-lg-3"></div>
+								</div>
+							</div><!--ibox-content-->
+						@endif
 				</div><!--ibox-->
 			</div>
 

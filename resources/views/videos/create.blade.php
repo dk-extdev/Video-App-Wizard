@@ -11,7 +11,7 @@
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <h2>
-                            Create Video
+                            Create Video | <a href="/insert_video">Insert Video</a>
                         </h2>
                     </div>
                     <div class="ibox-content create_video_wizard">
@@ -49,14 +49,16 @@
                                   <div class="hr-line-dashed"></div>
                                   <h5>CATEGORIES</h5>
                                   @foreach($category as $singlecategory)
-                                    @if($singlecategory->id != "20")
+                                    @if($singlecategory->id != "20" && $singlecategory->id != "25")
                                       <div class="i-checks"><label> <input type="checkbox" class="template-category" value="{{$singlecategory->id}}"> <i></i> {{$singlecategory->name}} </label></div>
-                                    @else
-                                      @if(Auth::guard('user')->user()->type == "Premium")
-                                        <div class="i-checks"><label> <input type="checkbox" class="template-category" value="{{$singlecategory->id}}"> <i></i> {{$singlecategory->name}} </label></div>
-                                      @endif
                                     @endif
-                                    
+                                  @endforeach
+                                  @foreach($category as $singlecategory)
+                                    @if($singlecategory->id == "20" && Auth::guard('user')->user()->type == "Premium")
+                                      <div class="i-checks"><label> <input type="checkbox" class="template-category" value="{{$singlecategory->id}}"> <i></i> {{$singlecategory->name}} </label></div>
+                                    @elseif($singlecategory->id == "25" && Auth::guard('user')->user()->type == "Premium")
+                                      <div class="i-checks"><label> <input type="checkbox" class="template-category" value="{{$singlecategory->id}}"> <i></i> {{$singlecategory->name}} </label></div>
+                                    @endif
                                   @endforeach
                                   <div class="hr-line-dashed"></div>
                                   <div class="clearfix"></div>
@@ -117,7 +119,7 @@
                                   <div class="i-checks"><label> <input type="radio" checked="" value="step3-1" name="rd-step3"> <i></i> Create One Video </label></div>
                                   <div class="i-checks"><label> <input type="radio" value="step3-2" name="rd-step3"> <i></i>  Create Multi Videos (CSV Upload)</label></div>
                                   <br>
-                                  <a class="btn btn-success btn-rounded btn-create_video-step-3-selection" href="#">Customize&nbsp;<i class = "fa fa-long-arrow-right"></i></a>
+                                  <!--a class="btn btn-success btn-rounded btn-create_video-step-3-selection" href="#">Customize&nbsp;<i class = "fa fa-long-arrow-right"></i></a-->
                                   <br>
                                   <br>
                                   <br>
@@ -139,19 +141,43 @@
                                 </div>
                               </div>
                               <div class="text-left m-t-md create_video-step3-3">
-                                <div class="alert csv-field-error alert-danger" role="alert">
-                                </div>
                                 <div class = "col-lg-6">
                                   <hr>
                                   <div class="form-group">
                                     <h1>Upload your data from CSV:</h1>
+                                  </div>
+                                  <div class="form-group">
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="checkbox" id="defaultcsv" value="" name="defaultcsv">
+                                      <label class="form-check-label" for="defaultcsv">
+                                        Override using default values
+                                      </label>
+                                    </div>  
+                                  </div>
+                                  <div class="form-group">
                                     <label>Sender Name</label><input type="text" maxlength="100" placeholder="" id="csv_sender_name" value="{{ Auth::guard('user')->user()->name }}" class="form-control">
                                   </div>
                                   <div class="form-group">
                                     <label>Sender Email</label><input type="text" maxlength="100" placeholder="" id="csv_sender_email" value="{{ Auth::guard('user')->user()->email }}" class="form-control">
                                   </div>
                                   <div class="form-group">
-                                    <label>Email Subject</label><input type="text" maxlength="100" placeholder="" id="csv_email_subject" value="" class="form-control">
+                                    <label for="csv_email_template">Email Template:</label>
+                                    <select id="csv_email_template" class="form-control select-csv-email-template"><option value="">Select one...</option>
+                                      @foreach($emailtemplates as $emailtemplate)
+                                        <option data-id = "{{$emailtemplate->id}}">{{$emailtemplate->name}}</option>
+                                      @endforeach
+                                    </select>
+                                  </div>
+                                  <div class="form-group">
+                                    <label>Email Subject:</label><input type="text" maxlength="100" placeholder="" name="csv_email_subject" id="csv_email_subject" class="form-control">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="csv_email_body">Email Message:</label>
+                                    <textarea class="email-template-area form-control" rows="5" name="csv_email_body" id="csv_email_body"></textarea>
+                                  </div>
+                                  <div id="csv_ext_field" class="hide">
+                                  </div>
+                                  <div id="csv_outro_field">
                                   </div>
                                   <form id="upload-csv" method="post">
                                       <label>Upload a CSV file</label>
@@ -165,12 +191,19 @@
                                   </form>
                                   <p class = "text-warning" >maximum number of lines : 50</p>
                                   <p class = "text-success hide" ></p>
-                                  <div id="csv_mapping"></div>
+                                  
                                 </div>
                                 <div class = "col-lg-6" >
                                   <label>Preview</label>
                                   <div class = "create_video-previewbox" id="create_video_previewbox2">
                                   </div>
+                                </div>
+                                <div class = "col-lg-12" >
+                                  <div id="csv_mapping"></div>
+                                </div>
+                              </div>
+                              <div class="text-left m-t-md create_video-step3-4">
+                                <div class="alert csv-field-error alert-danger" role="alert">
                                 </div>
                                 <div class = "col-lg-12" >
                                   <div id="csv-display" class="hide">
@@ -197,6 +230,11 @@
                                 <h3>Choose logo image.</h3>
                               </div>
                               <div class="modal-body">
+                                <div class="form-group">
+                                  <label for="change_logo_field">Select field to use image:</label>
+                                  <select class="form-control" id="change_logo_field">
+                                  </select>
+                                </div>
                                 <div id="loadingImg" style="display: none;text-align:center">
                                     <div>Loading images for logo.</div>
                                     <img src="{{ asset('assets/theme-new/img/ajax-loader.gif') }}">
@@ -206,6 +244,22 @@
                             </div>
                           </div>
                         </div>  
+                        <div id="cellModal" class="modal fade">
+                          <div class="modal-dialog" style="top:25%">
+                            <div class="modal-content">
+                              <div class="modal-body">
+                                <div class="form-group">
+                                  <label id="change_cell_label" for="change_cell">Enter the value to change:</label>
+                                  <input type="text" class="form-control" id = "change_cell" >
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" id="cellSave" class="btn btn-primary">OK</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div> 
                     </div>
                 </div>
               </div>

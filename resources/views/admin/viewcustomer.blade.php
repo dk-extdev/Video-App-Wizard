@@ -27,15 +27,15 @@
 				<div class="box-body">
 					<table id="customerTable" class="table table-bordered table-striped">
 						<cols>
-                    		<col width = "10%" >
-                    		<col width = "10%" >
-                    		<col width = "10%" >
-                    		<col width = "15%" >
-                    		<col width = "10%" >
-                    		<col width = "10%" >
+                    		<col width = "5%" >
                     		<col width = "10%" >
                     		<col width = "10%" >
                     		<col width = "15%" >
+                    		<col width = "10%" >
+                    		<col width = "10%" >
+                    		<col width = "10%" >
+                    		<col width = "10%" >
+                    		<col width = "20%" >
                     	</cols>
 						<thead>
 						<tr>
@@ -64,7 +64,7 @@
 									@endif
 									<td>{{ $customer->rendering_video_num }}  Videos</td>
 									<td id="customer_status_show">@if ($customer->status == 1) Yes @else No @endif</td>
-									<td><a href="{{ route('admin_edit_customer', [$customer->id]) }}" class="view-video-hyper"><span class="fa fa-edit"></span></a><a href="#" id="hypercustomerid{{ $customer->id }}" customerid="{{ $customer->id }}" customertype="{{ $customer->type }}" class="transaction_modal view-video-hyper"><span class="fa fa-dollar"></span></a><button type="button" class="btn btn-block btn-primary customer-suspend" data-suspendid="{{ $customer->id }}">@if ($customer->status == 1) Suspend @else Unsuspend @endif</button><a href="#" data-id="{{ $customer->id }}" class="delete-customer-id view-video-hyper"><span class="fa fa-trash"></span></a></td>
+									<td><a href="{{ route('admin_edit_customer', [$customer->id]) }}" class="view-video-hyper"><span class="fa fa-edit"></span></a><a href="#" id="hypercustomerid{{ $customer->id }}" customerid="{{ $customer->id }}" customertype="{{ $customer->type }}" class="transaction_modal view-video-hyper"><span class="fa fa-dollar"></span></a><button type="button" class="btn btn-block btn-primary customer-suspend" data-suspendid="{{ $customer->id }}">@if ($customer->status == 1) Suspend @else Unsuspend @endif</button>@if ($customer->status == 1) <button type="button" class="btn btn-primary customer-login" data-loginid="{{ $customer->id }}">Login</button>@endif<a href="#" data-id="{{ $customer->id }}" class="delete-customer-id view-video-hyper"><span class="fa fa-trash"></span></a></td>
 							</tr>
 							@endforeach
 						</tbody>

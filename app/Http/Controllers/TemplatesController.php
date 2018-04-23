@@ -7,6 +7,7 @@ use App\TemplateVideos;
 use App\TemplateGroup;
 use App\TemplateField;
 use App\UserVideos;
+use App\EmailTemplate;
 use Auth;
 use DB;
 use Session;
@@ -32,10 +33,12 @@ class TemplatesController extends Controller
         $project = TemplateGroup::select('project')->where("id",$groupId)->get()->first();
         $template_field = TemplateField::where("template_group_id",$groupId)->get();
         $common_field = $this->getTableColumns("common_field");
+        $emailtemplates = EmailTemplate::all();
         $response['project'] = $project;
         $response['template_field'] = $template_field;
         $response['common_field'] = $common_field;
         $response['template_group_id'] = $groupId;
+        $response['emailtemplates'] = $emailtemplates;
         return \Response::json($response);
         /*$group = TemplateGroup::select('project')->where("id",$groupId)->get()->first();
         if(isset($group['project'])){

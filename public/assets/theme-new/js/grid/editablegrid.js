@@ -1817,7 +1817,8 @@ EditableGrid.prototype._renderHeaders = function()
  * @param {Object} e
  * @private
  */
-EditableGrid.prototype.mouseClicked = function(e) 
+ var global_rowIndex,global_columnIndex;
+EditableGrid.prototype.mouseClicked = function(e)
 {
 	e = e || window.event;
 	with (this) {
@@ -1835,11 +1836,36 @@ EditableGrid.prototype.mouseClicked = function(e)
 		// get cell position in table
 		var rowIndex = getRowIndex(target.parentNode);
 		var columnIndex = target.cellIndex;
+		global_rowIndex = rowIndex;
+		global_columnIndex = columnIndex;
+		//editCell(rowIndex, columnIndex);	
+		var column = columns[columnIndex];
+		if (column) {
+			if (column.editable) { 
+				$("#change_cell").val(getValueAt(rowIndex, columnIndex));
+				$("#change_cell_label").html('Enter the value to change <b>'+getColumnLabel(columnIndex)+'</b>:')
+				$("#cellModal").modal('show');
+				$('#cellSave').on('click',function(){
+					setValueAt(global_rowIndex,global_columnIndex,$("#change_cell").val(),true);
+					$("#cellModal").modal('hide');
+				});
+				$('body').keypress(function (e) {
+					var key = e.which;
+					if(key == 13)  // the enter key code
+					{
+						setValueAt(global_rowIndex,global_columnIndex,$("#change_cell").val(),true);
+						$("#cellModal").modal('hide');
+					}
+				});   
 
-		editCell(rowIndex, columnIndex);		
+			}
+		}
 	}
 };
 
+/*
+	
+*/
 /**
  * Edit Cell
  * @param rowIndex

@@ -22,11 +22,13 @@ class TemplateController extends Controller
     public function add(Request $request)
     {
     	$project = $request->project;
+        $flag = $request->flag;
     	$attr = json_decode($request->attr);
 		
         if(isset($project)){
         	DB::table('template_group')->insert([
-        		'project' => $project
+        		'project' => $project,
+                'flag' =>$flag
         	]);	
         	$template_group_id = DB::table('template_group')->orderBy('id', 'desc')->first()->id;
         }
@@ -36,7 +38,8 @@ class TemplateController extends Controller
                 'title' => $v[0],
                 'html_label' => $v[1],
                 'type' => $v[2],
-                'validation_rules' => $v[3]
+                'validation_rules' => $v[3],
+                'default_value' => $v[4]
             ]);  
         }
         $response['success'] = 'success';
@@ -66,7 +69,8 @@ class TemplateController extends Controller
         }
 
         $template_fields = DB::select("SELECT *, (SELECT COUNT(*) FROM template_field as f WHERE ff.template_group_id = f.template_group_id) as count FROM template_field as ff WHERE 1");
-        $template_groups = DB::table('template_group')->get();
+        $template_groups = DB::table('template_group')
+        ->orderBy('project', SORT_REGULAR, false)->get();
         return view('admin.viewtemplate')
         ->with('template_fields',$template_fields)
         ->with('template_groups',$template_groups);
@@ -89,8 +93,9 @@ class TemplateController extends Controller
     public function update($id, Request $request)
     {
         $project = $request->project;
+        $flag = $request->flag;
         $attr = json_decode($request->attr);
-        DB::table('template_group')->where('id', $id)->update( ['project' => $project]);
+        DB::table('template_group')->where('id', $id)->update( ['project' => $project,'flag' => $flag]);
         DB::table('template_field')->where('template_group_id', '=', $id)->delete(); 
         foreach ($attr as $k => $v) {
             DB::table('template_field')->insert([
@@ -98,7 +103,8 @@ class TemplateController extends Controller
                 'title' => $v[0],
                 'html_label' => $v[1],
                 'type' => $v[2],
-                'validation_rules' => $v[3]
+                'validation_rules' => $v[3],
+                'default_value' => $v[4]
             ]);    
         }
         $response = array();

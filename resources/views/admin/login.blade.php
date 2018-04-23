@@ -1,11 +1,11 @@
 @extends('admin.layouts.auth')
 
-@section('title', 'Dynamic Video | Log in')
+@section('title', 'Video Platform | Log in')
 
 @section('content')
 <div class="login-box">
   <div class="login-logo">
-    <a href="#"><b>Dynamic Video</b></a>
+    <a href="#"><b>Video Platform</b></a>
   </div>
   <div class="login-box-body">
     <p class="login-box-msg">Sign in to start your session</p>

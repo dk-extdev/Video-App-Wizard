@@ -7,23 +7,14 @@
 
 <div class="middle-box text-center loginscreen animated fadeInDown">
     <div>
-        <div>
-
-            <h1 class="logo-name">DV</h1>
-
+        <div class="video-platform-logo">
         </div>
-        <h3>Welcome to Dynamic Video</h3>
-        <p>Hello there! Sign in and start becoming a Dynamic Video!
+        <h3>Welcome to Video Platform</h3>
+        <p>Hello there! Sign in and start becoming a Video Platform!
             <!--Continually expanded and constantly improved Inspinia Admin Them (IN+)-->
         </p>
         <p>Login in. To see it in action.</p>
 
-        @if (session()->has('message'))
-        <div class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            {{ session()->get('message') }}
-        </div>
-        @endif
         @if(Session::has('success'))
         <div class="alert alert-success" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -56,7 +47,7 @@
 
         <a href="{{ route('user-forget-password') }}"><small>Forgot password?</small></a>
         {!! Form::close() !!}
-        <p class="m-t"> <small><strong>Copyright</strong> Dynamic Video&copy; 2014-2017</small> </p>
+        <p class="m-t"> <small><strong>Copyright</strong> Video Platform&copy; 2018</small> </p>
     </div>
 </div>
 @endsection

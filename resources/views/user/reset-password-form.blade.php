@@ -11,8 +11,7 @@
             <div class="container">
                 <div class="row">
                     <div class="middle-box text-center animated fadeInDown">
-                        <div>
-                            <h1 class="logo-name">DV</h1>
+                        <div class="video-platform-logo">
                         </div>
                         <h3>User Password Reset</h3>
                         @if (session()->has('message'))

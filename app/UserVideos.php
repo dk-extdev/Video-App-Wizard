@@ -12,10 +12,12 @@ class UserVideos extends Model
     const FILLABLE = [
         'project_id',
         'project_title',
+        'direct_download',
         'video_url',
         'user_id',
         'common_field_id',
         'template_video_id',
+        'options',
         'status'
     ];
 

@@ -17,6 +17,8 @@ class CreateCommonFieldTable extends Migration {
 			$table->integer('id', true);
 			$table->string('sender_name');
 			$table->string('sender_email');
+			$table->string('email_subject')->nullable();;
+			$table->longText('email_body')->nullable();;
 			$table->string('customer_first_name');
 			$table->string('customer_last_name');
 			$table->string('customer_email');

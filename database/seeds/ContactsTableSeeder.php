@@ -22,7 +22,7 @@ class ContactsTableSeeder extends Seeder
                 'id' => 1,
                 'number' => '123456',
                 'address' => 'Moscow,Russia',
-                'email' => 'dk1986830@gmail.com',
+                'email' => 'support@videoplatform.io',
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),

@@ -20,7 +20,7 @@ class TitlesTableSeeder extends Seeder
             0 => 
             array (
                 'id' => 1,
-                'title' => 'Dynamic Video',
+                'title' => 'Video Platform',
                 'created_at' => '2017-12-15 13:32:57',
                 'updated_at' => '2017-12-15 13:32:57',
             ),

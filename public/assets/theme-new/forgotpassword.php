@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Dynamic Video | Login</title>
+    <title>Video Platform | Login</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -20,9 +20,7 @@
 
     <div class="middle-box text-center loginscreen animated fadeInDown">
         <div>
-            <div>
-
-                <h1 class="logo-name">DV</h1>
+            <div class="video-platform-logo">
 
             </div>
                 <div class="ibox-content">
@@ -48,7 +46,7 @@
                     </div>
                 </div>
 
-            <p class="m-t"> <small><strong>Copyright</strong> Dynamic Video&copy; 2014-2017</small> </p>
+            <p class="m-t"> <small><strong>Copyright</strong> Video Platform&copy; 2018</small> </p>
         </div>
     </div>
 

@@ -48,6 +48,17 @@
                   <label>Project:</label>
                   <input type="text" id="project" name="project" required="true" value="{{$templategroupdata->project}}" class="form-control">
                 </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" 
+                  @if($templategroupdata->flag==1){
+                    checked
+                  }
+                  @endif 
+                  id="template_flag">
+                  <label class="form-check-label" for="template_flag">
+                    Flag(Show Template)
+                  </label>
+                </div>
               </div>
             </div>
             <div class="row">
@@ -55,12 +66,20 @@
                 <h4 class="box-title">Template Fields</h4>
               </div>
               <table id="newTemplate" class="table">
+                <cols>
+                  <col width = "20%" >
+                  <col width = "20%" >
+                  <col width = "15%" >
+                  <col width = "15%" >
+                  <col width = "30%" >
+                </cols>
                 <thead>
                   <tr>
                     <th>Title</th>
                     <th>Html Label</th>
                     <th>Type</th>
                     <th>Validation Rules</th>
+                    <th>Default Value</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -85,14 +104,32 @@
                         @endif
                         >File</option>
                         <option 
+                        @if ($templatefield->type === "File Video") 
+                        selected 
+                        @endif
+                        >File Video</option>
+                        <option 
+                        @if ($templatefield->type === "File Music") 
+                        selected 
+                        @endif
+                        >File Music</option>
+                        <option 
                         @if ($templatefield->type === "Color Picker") 
                         selected 
                         @endif
                         >Color Picker</option>
+                        <option 
+                        @if ($templatefield->type === "Outro") 
+                        selected 
+                        @endif
+                        >Outro</option>
                       </select>
                     </td>
                     <td>
                       <input type="text" required="true" value="{{$templatefield->validation_rules}}" class="form-control">
+                    </td>
+                    <td>
+                      <input type="text" required="true" value="{{$templatefield->default_value}}" class="form-control">
                     </td>
                     <td>
                       @if ($index === 0) 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Transaction;
 use Illuminate\Http\Request;
 use App\Admin;
 use App\Footer;
@@ -20,7 +21,129 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller;
 class CustomerController extends Controller
 {
-    //
+    private function processSale($order)
+    {
+        $maxItem = 0;
+        $types = ['Basic', 'Standart', 'Premium'];
+        foreach ($order->lineItems as $item) {
+            if ($item->itemNo > $maxItem) {
+                $maxItem = $item->itemNo;
+            }
+        }
+        if ($user = User::where('email', '=', $order->customer->billing->email)->first()) {
+            if ($maxItem && $maxItem > array_search($user->type, $types) + 1) {
+                $user->type = $types[$maxItem-1];
+                $user->save();
+            }
+        } else {
+            $user = new User();
+            $user->name = $order->customer->billing->fullName;
+            $user->email = $order->customer->billing->email;
+            $random_password = str_random(12);
+            $user->password = Hash::make($random_password);
+            if ($maxItem) {
+                $user->type = $types[$maxItem-1];
+            }
+            $user->status = 1;
+
+            $contact = Contact::first();
+            if ($user->save()){
+                $data = [
+                    'name' => $user->name,
+                    'contactemail' => $contact->email,
+                    'email' => $user->email,
+                    'password' => $random_password
+                ];
+                Mail::send('mail.registration', $data, function($message) use ($data) {
+                    $message->to( $data['email'], $data['name'])->subject('Your VideoPlatform App Login Details');
+                    $message->from($data['contactemail'], $data['contactemail']);
+                });
+            }
+        }
+        return $user;
+    }
+    private function processBill($order)
+    {
+        $user = User::where('email', '=', $order->customer->billing->email)->first();
+
+        return $user;
+    }
+    private function processRefund($order)
+    {
+        $user = User::where('email', '=', $order->customer->billing->email)->first();
+        $transaction = Transaction::where('receipt', $order->receipt)->where('type', '!=', 'RFND')->first();
+        $transaction->refunded = true;
+        $transaction->save();
+        $this->updateUserPermissions($user);
+
+        return $user;
+    }
+    private function findUser($order)
+    {
+        if (!$user = User::where('email', '=', $order->customer->billing->email)->first()) {
+            $user = new User();
+            $user->name = $order->customer->billing->fullName;
+            $user->email = $order->customer->billing->email;
+            if ($order->transactionType == 'TEST_SALE') {
+                $user->type = 'test';
+            }
+            $user->save();
+        }
+
+        return $user;
+    }
+    private function updateUserPermissions($user)
+    {
+        $types = ['Basic', 'Standart'];
+        $premium = false;
+        $active = false;
+        foreach (Transaction::where('user_id', $user->id)->where('type', 'SALE')->where('refunded', false)->get() as $transaction) {
+            $order = json_decode($transaction->data);
+            foreach ($order->lineItems as $item) {
+                if ($item->itemNo == 3) {
+                    $premium = true;
+                } else {
+                    $active = true;
+                    $type = $item->itemNo;
+                }
+            }
+        }
+        if ($active) {
+            $user->status = true;
+            if ($premium) {
+                $user->type = 'Premium';
+            } else {
+                $user->type = $types[$type-1];
+            }
+        } else {
+            $user->status = false;
+        }
+        $user->save();
+    }
+    private function processClickbankCallback($decrypted)
+    {
+        $order = json_decode($decrypted);
+        switch ($order->transactionType) {
+            case 'SALE':
+            case 'TEST_SALE':
+                $user = $this->processSale($order);
+                break;
+            case 'BILL':
+                $user = $this->processBill($order);
+                break;
+            case 'RFND':
+                $user = $this->processRefund($order);
+                break;
+            default:
+                $user = $this->findUser($order);
+        }
+        $transaction = new Transaction();
+        $transaction->user_id = $user->id;
+        $transaction->type = $order->transactionType;
+        $transaction->receipt = $order->receipt;
+        $transaction->data = $decrypted;
+        $transaction->save();
+    }
     public function create()
     {
         $admin_id_loggedin = Session::get('admin_id_loggedin');
@@ -63,15 +186,14 @@ class CustomerController extends Controller
             Session::flash('success', 'New Customer Created Successfully');
             if($request['new_customer_confirm']=='on'){
                 $data = array(
-                    'name'=>$request['new_customer_name'],
-                    'contactemail'=>$contact->email,
-                    'email'=>$request['new_customer_email'],
-                    'password'=>$request['new_customer_password'],
-                    'bodyMessage'=>'Thanks for your joining Dynamic Video App. Please try to login with this info. Email:'.$request['new_customer_email'].' Password:'.$request['new_customer_password']
+                    'name' => trim($request['new_customer_name']) == '' ? 'Customer' : $request['new_customer_name'],
+                    'contactemail' => $contact->email,
+                    'email' => $request['new_customer_email'],
+                    'password' => $request['new_customer_password'],
                 );
-                Mail::send('mail.mail', $data, function($message) use ($data) {
-                 $message->to( $data['email'], 'New Customer Create')->subject('Welcome To Create Customer');
-                 $message->from($data['contactemail'],'');
+                Mail::send('mail.registration', $data, function($message) use ($data) {
+                    $message->to( $data['email'], ucwords($data['name']) )->subject('Your VideoPlatform App Login Details');
+                    $message->from($data['contactemail'], $data['contactemail']);
                 });
             }
         }else{
@@ -204,6 +326,27 @@ class CustomerController extends Controller
         $response['success'] = 'success';
         $response['id'] = $id;
         $response['returnstatus'] = $returnstatus;
+        return \Response::json($response);
+    }
+    public function clickbankCallback(Request $response)
+    {
+        $secretKey = env('CLICKBANK_CLIENT_SECRET', null); // secret key from your ClickBank account
+        $message = json_decode($response->getContent()); // get JSON from raw body...
+
+        $encrypted = $message->{'notification'}; // Pull out the encrypted notification
+        $iv = $message->{'iv'}; // Pull out the initialization vector for AES/CBC/PKCS5Padding decryption
+
+        $decrypted = trim(
+            openssl_decrypt(base64_decode($encrypted), // decrypt the body...
+                'AES-256-CBC',
+                substr(sha1($secretKey), 0, 32),
+                OPENSSL_RAW_DATA,
+                base64_decode($iv)), "\0..\32");
+
+        $this->processClickbankCallback($decrypted);
+
+        $response = array();
+        $response['success'] = 'success';
         return \Response::json($response);
     }
 }

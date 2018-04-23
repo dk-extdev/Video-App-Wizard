@@ -80,12 +80,12 @@ class HomeController extends Controller
                 'g_title' => $title->title,
                 'subject' => 'Password Reset',
             ];
-            Mail::send('mail.reset-mail', ['name' => $user->name,'link'=>$url,'footer'=>$footer->left_footer], function ($m) use ($mail_val) {
+            Mail::send('mail.reset-mail', ['name' => $user->name,'link'=>$url], function ($m) use ($mail_val) {
                 $m->from($mail_val['g_email'], $mail_val['g_title']);
                 $m->to($mail_val['email'], $mail_val['name'])->subject($mail_val['subject']);
             });
 
-            session()->flash('message', 'Check Your Email.Reset link Successfully send.');
+            session()->flash('success', 'Check Your Email.Reset link Successfully send.');
             Session::flash('type', 'success');
             return redirect()->back();
         }else{
@@ -134,7 +134,7 @@ class HomeController extends Controller
             $user->password = $password;
             $user->save();
             PasswordSubmit::whereEmail($pw1->email)->delete();
-            session()->flash('message', 'Password Reset Successfully.');
+            session()->flash('success', 'Password Reset Successfully.');
             Session::flash('type', 'success');
             return redirect()->route('userlogin');
         }else{

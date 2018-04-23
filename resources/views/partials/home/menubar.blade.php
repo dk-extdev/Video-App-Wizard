@@ -5,15 +5,11 @@
         <nav class="navbar navbar-static-top" role="navigation">
 
             <div class="navbar-header">
-
-                <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
-
+                <!-- <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
                     <i class="fa fa-reorder"></i>
-
                 </button>
-
-                <a href="{{ route('home') }}" id="logo1">Dynamic Video</a>
-
+                <a href="{{ route('home') }}" id="logo1">Video Platform</a> -->
+                <a href="{{ route('home') }}" id="logo1">Video Platform</a>
             </div>
 
             <div class="navbar-collapse collapse" id="navbar">
@@ -32,7 +28,7 @@
 
                     </li>
 
-                    <li class="@if(Route::current()->getName() == 'my_videos') active @endif">
+                    <li class="@if(Route::current()->getName() == 'my_videos' || Route::current()->getName() == 'hotspot_videos') active @endif">
 
                         <a aria-expanded="false" role="button" href="{{ action('VideosController@getMyVideos') }}"><i class="fa fa-align-left"></i> <span class="nav-label">My Videos</span></a>
 

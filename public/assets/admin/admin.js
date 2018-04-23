@@ -102,6 +102,31 @@ $(function () {
     });
   });
   
+  $('.customer-login').click(function(){
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    var id = $(this).data('loginid');
+    var formData = new FormData();
+    formData.append('id', id);
+    $.ajax({
+      url: 'customer-login',
+      data: formData,
+      processData: false,
+      contentType: false,
+      dataType: "json",
+      type: "POST",
+      success: function (data)
+      {
+        if(data.success=="success"){
+          location.href = data.url;
+        }
+      }
+    });
+  });
+
   $('.customer-suspend').click(function(){
     $.ajaxSetup({
       headers: {
@@ -178,6 +203,51 @@ $(function () {
         ]
     });
   });
+  $('.delete-emailtemplate-id').click(function(){
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    var id = $(this).data('id');
+    BootstrapDialog.show({
+        title: 'Delete Email Template',
+        message: 'Are you sure you want to delete this template?',
+        buttons: [
+        {
+            label: 'Cancel',
+            action: function(dialogItself){
+                dialogItself.close();
+            }
+        },{
+            label: 'Delete',
+            // no title as it is optional
+            cssClass: 'btn-danger',
+            action: function(dialogItself){
+              dialogItself.close();
+              $.ajax({
+                  url: "deleteemailtemplate/"+id,
+                  type: 'POST',
+                  dataType: "json",
+                  data: {
+                      "id": id,
+                  },
+                  success: function (data)
+                  {
+                      if(data.success=="success"){
+                        $('#emailtemplateTable tr').each(function(){
+                          if($(this).data('id') && $(this).data('id')==data.id){
+                            $(this).remove();
+                          }
+                        });
+                      }
+                  }
+              });
+            }
+        }
+        ]
+    });
+  });
   $('.delete-template-id').click(function(){
     $.ajaxSetup({
       headers: {
@@ -226,6 +296,9 @@ $(function () {
   $("body").on("click", "#removeTemplate", function() {
     $(this).parent().parent().remove();
   });
+  $("body").on("click", "#removeTemplateVideos", function() {
+    $(this).parent().parent().remove();
+  });
   $('#addTemplate').click(function(){
     var html = '';
     html += '<tr>\
@@ -237,10 +310,16 @@ $(function () {
       </td>\
       <td>\
         <select class="form-control color-picker">\
-          <option>Text</option>\
-          <option>File</option>\
-          <option>Color Picker</option>\
+          <option >Text</option>\
+          <option >File</option>\
+          <option >File Video</option>\
+          <option >File Music</option>\
+          <option >Color Picker</option>\
+          <option >Outro</option>\
         </select>\
+      </td>\
+      <td>\
+        <input type="text" required="true" class="form-control">\
       </td>\
       <td>\
         <input type="text" required="true" class="form-control">\
@@ -270,7 +349,12 @@ $(function () {
       }else{
         var formData = new FormData();
         var project = $("#project").val();
+        var flag = 1;
+        if(!$("#template_flag").is(':checked')){
+          flag = 0;
+        }
         formData.append('project', project);
+        formData.append('flag', flag);
         formData.append('attr', JSON.stringify(attr));
         $.ajaxSetup({
           headers: {
@@ -314,8 +398,13 @@ $(function () {
       if(!attr.length){
         return false;
       }else{
+        var flag = 1;
+        if(!$("#template_flag").is(':checked')){
+          flag = 0;
+        }
         var formData = new FormData();
         var project = $("#project").val();
+        formData.append('flag', flag);
         formData.append('project', project);
         formData.append('attr', JSON.stringify(attr));
         $.ajaxSetup({
@@ -343,4 +432,203 @@ $(function () {
       }
     }
   });
+  $('.delete-templatevideo-id').click(function(){
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    var id = $(this).data('id');
+    BootstrapDialog.show({
+        title: 'Delete News',
+        message: 'Are you sure you want to delete this templatevideo?',
+        buttons: [
+        {
+            label: 'Cancel',
+            action: function(dialogItself){
+                dialogItself.close();
+            }
+        },{
+            label: 'Delete',
+            // no title as it is optional
+            cssClass: 'btn-danger',
+            action: function(dialogItself){
+              dialogItself.close();
+              $.ajax({
+                  url: "deletetemplatevideos/"+id,
+                  type: 'POST',
+                  dataType: "json",
+                  data: {
+                      "id": id,
+                  },
+                  success: function (data)
+                  {
+                      if(data.success=="success"){
+                        $('#templatevideosTable tr').each(function(){
+                          if($(this).data('id') && $(this).data('id')==data.id){
+                            $(this).remove();
+                          }
+                        });
+                      }
+                  }
+              });
+            }
+        }
+        ]
+    });
+  });
+  $('#addTemplateVideos').click(function(){
+    var html = '';
+    html += '<tr>\
+      <td>\
+        ' + $("#newTemplateVideos tbody tr").first().find("td").first().html() + '\
+      </td>\
+      <td>\
+        <input type="text"  class="form-control" required >\
+      </td>\
+      <td>\
+        <input type="text"  class="form-control" required >\
+      </td>\
+      <td>\
+        ' + $("#newTemplateVideos tbody tr").first().find("td:eq(3)").html() + '\
+      </td>\
+      <td>\
+        <button type="button" id="removeTemplateVideos" class="form-control add-row btn btn-block btn-info" ><i class="glyphicon glyphicon-minus"></i></button>\
+      </td>\
+    </tr>';
+    $('#newTemplateVideos tbody').append(html);
+  });
+  $('#btnAddTemplateVideos').click(function(){
+    var template_data = [];
+    $('#newTemplateVideos tbody tr').each(function(){
+      if($(this).find(".form-control:eq(1)").val() && $(this).find(".form-control:eq(2)").val()) {
+        template_data.push(new Array);
+        $(this).find(".form-control").not("button").each(function(){
+          template_data[template_data.length - 1].push($(this).val());
+        });
+      }
+    });
+    if(!template_data.length){
+      return false;
+    }else{
+      var formData = new FormData();
+      formData.append('template_data', JSON.stringify(template_data));
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+      $.ajax(
+      {
+        url: "createtemplatevideos",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "json",
+        type: "POST",
+        success: function (data)
+        {
+          if(data['success']=="success"){
+            $('.alert-success').show();
+            setTimeout(function(){ $('.alert-success').hide(); }, 2000);
+          }
+        }
+      });
+    }
+  });
+  $('#addCategory').click(function(){
+    var html = '';
+    html += '<tr>\
+      <td>\
+        <input type="text" required="true" class="form-control">\
+      </td>\
+      <td>\
+        <button type="button" id="removeTemplate" class="form-control add-row btn btn-block btn-info" ><i class="glyphicon glyphicon-minus"></i></button>\
+      </td>\
+    </tr>';
+    $('#newCategory tbody').append(html);
+  });
+  $('#btnAddCategory').click(function(){
+    var attr = [];
+    $('#newCategory tbody tr').each(function(){
+      if($(this).find(".form-control").first().val()) {
+        attr.push(new Array);
+        $(this).find(".form-control").not("button").each(function(){
+          attr[attr.length - 1].push($(this).val());
+        });
+      }
+    });
+    if(!attr.length){
+      return false;
+    }else{
+      var formData = new FormData();
+      formData.append('attr', JSON.stringify(attr));
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+      $.ajax(
+      {
+        url: "createcategory",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "json",
+        type: "POST",
+        success: function (data)
+        {
+          if(data['success']=="success"){
+            $('.alert-success').show();
+            setTimeout(function(){ $('.alert-success').hide(); }, 2000);
+          }
+        }
+      });
+    }
+  });
+  $('.delete-category-id').click(function(){
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+      var id = $(this).data('id');
+      BootstrapDialog.show({
+          title: 'Delete Category',
+          message: 'Are you sure you want to delete this category?',
+          buttons: [
+          {
+              label: 'Cancel',
+              action: function(dialogItself){
+                  dialogItself.close();
+              }
+          },{
+              label: 'Delete',
+              // no title as it is optional
+              cssClass: 'btn-danger',
+              action: function(dialogItself){
+                dialogItself.close();
+                $.ajax({
+                    url: "deletecategory/"+id,
+                    type: 'POST',
+                    dataType: "json",
+                    data: {
+                        "id": id,
+                    },
+                    success: function (data)
+                    {
+                        if(data.success=="success"){
+                          $('#categoryTable tr').each(function(){
+                            if($(this).data('id') && $(this).data('id')==data.id){
+                              $(this).remove();
+                            }
+                          });
+                        }
+                    }
+                });
+              }
+          }
+          ]
+      });
+    });
 });

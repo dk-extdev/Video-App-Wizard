@@ -59,7 +59,7 @@
               <tr>
                 <td><i>app_name</i></td>
                 <td>Application Name</td>
-                <td><input type="text"  class="form-control" name="app_name" required value="Dynamic Video"></td>
+                <td><input type="text"  class="form-control" name="app_name" required value="Video Platform"></td>
               </tr>
               <tr>
                 <td><i>news_title</i></td>
